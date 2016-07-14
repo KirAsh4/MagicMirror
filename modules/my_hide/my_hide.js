@@ -1,12 +1,3 @@
-/* global Module */
-
-/* Magic Mirror
- * Module: HelloWorld
- *
- * By Michael Teeuw http://michaelteeuw.nl
- * MIT Licensed.
- */
-
 Module.register("my_hide",{
 
 	// Default module config.
@@ -42,7 +33,7 @@ Module.register("my_hide",{
 		var now = moment();
 
 		if (!(now.seconds() % 10)) {
-			Log.log("isHidden: " + this.isHidden);
+			Log.log("isHidden: " + this.isHidden);  // This always shows as 0 ...
 			Log.log((this.isHidden ? "Showing" : "Hiding") + " calender on " + now.seconds());
 			if (this.DOMloaded) {
 				MM.getModules().exceptModule(this).enumerate(function(module) {
@@ -50,14 +41,13 @@ Module.register("my_hide",{
 						/* So this is weird ..., the console log always shows isHidden as 0,
 						   yet, the next condition works as expected ... */
 						if (this.isHidden) {
-							module.show(3000, function() {
+							module.show(2000, function() {
 								// Module hidden.
 								// this.isHidden = 0;  /* This doesn't set it either */
 							});
 							this.isHidden = 0;
 						} else {
-							this.isHidden = 1;
-							module.hide(3000, function() {
+							module.hide(2000, function() {
 								// Module hidden.
 								// this.isHidden = 1;  /* This doesn't set it either */
 							});
