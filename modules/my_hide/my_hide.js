@@ -40,25 +40,26 @@ Module.register("my_hide",{
 	getDom: function() {
 
 		var now = moment();
-		Log.log("DOM loaded? : " + this.DOMloaded);
 
 		if (!(now.seconds() % 10)) {
 			Log.log("isHidden: " + this.isHidden);
 			Log.log((this.isHidden ? "Showing" : "Hiding") + " calender on " + now.seconds());
 			if (this.DOMloaded) {
 				MM.getModules().exceptModule(this).enumerate(function(module) {
-					if (module.name === "calendar_monthly") {
+					if (module.name === "calendar") {
+						/* So this is weird ..., the console log always shows isHidden as 0,
+						   yet, the next condition works as expected ... */
 						if (this.isHidden) {
 							module.show(3000, function() {
-								//Module hidden.
-//								this.isHidden = 0;
+								// Module hidden.
+								// this.isHidden = 0;  /* This doesn't set it either */
 							});
 							this.isHidden = 0;
 						} else {
 							this.isHidden = 1;
 							module.hide(3000, function() {
-								//Module hidden.
-//								this.isHidden = 1;
+								// Module hidden.
+								// this.isHidden = 1;  /* This doesn't set it either */
 							});
 							this.isHidden = 1;
 						}
@@ -66,5 +67,7 @@ Module.register("my_hide",{
 				});
 			}
 		}
+		var wrapper = document.createElement("div");
+		return wrapper;
 	}
 });
