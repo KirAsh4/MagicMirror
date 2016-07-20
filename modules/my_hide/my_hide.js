@@ -11,12 +11,12 @@ Module.register("my_hide",{
 
 	start: function() {
 		Log.log("Starting module: " + this.name);
-		this.DOMloaded = 0;
+		var self = this;
+
 		this.isHidden = 0;
 
-		var self = this;
 		setInterval(function() {
-			self.updateDom();
+			self.showHideModule();
 		}, 1000);
 
 	},
@@ -27,19 +27,14 @@ Module.register("my_hide",{
 		}
 	},
 
-	// Override dom generator.
-	getDom: function() {
-
-		var now = moment();
+	showHideModule() {
 		var self = this;
-
-		if (!(now.seconds() % 10)) {
-			Log.log("==========");
-			Log.log("isHidden: " + self.isHidden);
-			Log.log((self.isHidden ? "Showing" : "Hiding") + " calender on " + now.seconds());
+		var now = moment();
+		
+		if (!(now.seconds() % 20)) { // fade in/out on 00, 20, and 40 seconds.
 			if (this.DOMloaded) {
 				MM.getModules().exceptModule(this).enumerate(function(module) {
-					if (module.name === "calendar") {
+					if (module.name === "calendar_monthly") {
 						if (self.isHidden) {
 							module.show(2000, function() {
 								// Module hidden.
@@ -55,7 +50,5 @@ Module.register("my_hide",{
 				});
 			}
 		}
-		var wrapper = document.createElement("div");
-		return wrapper;
 	}
 });
