@@ -2,19 +2,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unpublished
+## [2.0.4] - 2016-08-07
 
 ### Added
-- Brazilian Portuguese Translation
+- Brazilian Portuguese Translation.
+- Option to enable Kios mode.
+- Added ability to start the app with Dev Tools.
+- Added ability to turn off the date display in `clock.js` when in analog mode.
+- Greek Translation
 
 ### Fixed
 - Prevent `getModules()` selectors from returning duplicate entries.
 - Append endpoints of weather modules with `/` to retreive the correct data. (Issue [#337](https://github.com/MichMich/MagicMirror/issues/337))
 - Corrected grammer in `module.js` from 'suspend' to 'suspended'.
+- Fixed openweathermap.org URL in config sample.
+- Prevent currentweather module from crashing when received data object is incorrect.
+- Fix issue where translation loading prevented the UI start-up when the language was set to 'en'. (Issue [#388](https://github.com/MichMich/MagicMirror/issues/388))
 
-### Added
-- Added ability to turn off the date display in `clock.js` when in analog mode.
-- Greek Translation
+### Updated
+- Updated package.json to fix possible vulnerabilities. (Using Snyk)
+- Updated weathericons
+- Updated default weatherforecast to work with the new icons.
+- More detailed error message in case config file couldn't be loaded.
 
 ## [2.0.3] - 2016-07-12
 ### Added
