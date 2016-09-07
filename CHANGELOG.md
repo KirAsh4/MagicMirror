@@ -2,11 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unpublished
+
+### Added
+- Added ability to remove tags from the beginning or end of newsfeed items in 'newsfeed.js'.
+- Added ability to define "the day after tomorrow" for calendar events (Definition for German and Dutch already included).
+- Added CII Badge (we are compliant with the CII Best Practices)
+
+### Fixed
+- Fix typo in installer.
+- Add message to unsupported Pi error to mention that Pi Zeros must use server only mode, as ARMv6 is unsupported. Closes #374.
+- Fix API url for weather API.
+
+### Updated
+- Force fullscreen when kioskmode is active.
+
 ## [2.0.4] - 2016-08-07
 
 ### Added
 - Brazilian Portuguese Translation.
-- Option to enable Kios mode.
+- Option to enable Kiosk mode.
 - Added ability to start the app with Dev Tools.
 - Added ability to turn off the date display in `clock.js` when in analog mode.
 - Greek Translation
