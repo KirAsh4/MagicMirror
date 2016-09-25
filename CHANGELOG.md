@@ -2,12 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unpublished
+
+## [2.1.0] - Unreleased
+
+### Added
+- Method to overwrite the module's header. [See documentation.](https://github.com/MichMich/MagicMirror/tree/develop/modules#getheader)
+
+### Updated
+- Modified translations for Frysk.
+- Updated package.json as a result of Snyk security update.
+
+## [2.0.5] - 2016-09-20
 
 ### Added
 - Added ability to remove tags from the beginning or end of newsfeed items in 'newsfeed.js'.
 - Added ability to define "the day after tomorrow" for calendar events (Definition for German and Dutch already included).
 - Added CII Badge (we are compliant with the CII Best Practices)
+- Add support for doing http basic auth when loading calendars
+- Add the abilty to turn off and on the date display in the Clock Module
 
 ### Fixed
 - Fix typo in installer.
@@ -16,6 +28,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Updated
 - Force fullscreen when kioskmode is active.
+- Update the .github templates and information with more modern information.
+- Update the Gruntfile with a more functional StyleLint implementation.
 
 ## [2.0.4] - 2016-08-07
 
@@ -86,4 +100,4 @@ It includes (but is not limited to) the following features:
 
 ## [1.0.0] - 2014-02-16
 ### Initial release of MagicMirror.
-This was part of the blogpost: http://michaelteeuw.nl/post/83916869600/magic-mirror-part-vi-production-of-the
+This was part of the blogpost: [http://michaelteeuw.nl/post/83916869600/magic-mirror-part-vi-production-of-the](http://michaelteeuw.nl/post/83916869600/magic-mirror-part-vi-production-of-the)
