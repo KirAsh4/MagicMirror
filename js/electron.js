@@ -18,25 +18,30 @@ const BrowserWindow = electron.BrowserWindow;
 let mainWindow;
 
 function createWindow() {
-	
-	var electronOptions = {
-		width: 800, 
-		height: 600, 
-		x: 0, 
+
+	var electronOptionsDefaults = {
+		width: 800,
+		height: 600,
+		x: 0,
 		y: 0,
-		darkTheme: true, 
+		darkTheme: true,
 		webPreferences: {
-			nodeIntegration: false, 
+			nodeIntegration: false,
 			zoomFactor: config.zoom
-		}
+		},
+		backgroundColor: "#000000"
 	}
 
+	// DEPRECATED: "kioskmode" backwards compatibility, to be removed
+	// settings these options directly instead provides cleaner interface
 	if (config.kioskmode) {
-		electronOptions.kiosk = true;	
+		electronOptionsDefaults.kiosk = true;
 	} else {
-		electronOptions.fullscreen = true;
-		electronOptions.autoHideMenuBar = true;
+		electronOptionsDefaults.fullscreen = true;
+		electronOptionsDefaults.autoHideMenuBar = true;
 	}
+
+	var electronOptions = Object.assign({}, electronOptionsDefaults, config.electronOptions);
 
 	// Create the browser window.
 	mainWindow = new BrowserWindow(electronOptions);

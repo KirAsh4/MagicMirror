@@ -82,11 +82,11 @@ Any properties defined in the defaults object, will be merged with the module co
 
 *Introduced in version: 2.1.0.*
 
-A string that defines the minimum version of the MagicMirror framework. If it is set, the system compares the required version with the users version. If the version of the user is out of date, it won't run the module. Make sure to also set this value in the Node helper. 
+A string that defines the minimum version of the MagicMirror framework. If it is set, the system compares the required version with the users version. If the version of the user is out of date, it won't run the module. Make sure to also set this value in the Node helper.
 
 **Note:** Since this check is introduced in version 2.1.0, this check will not be run in older versions. Keep this in mind if you get issue reports on your module.
 
-Example: 
+Example:
 ````javascript
 requiresVersion: "2.1.0",
 ````
@@ -95,6 +95,21 @@ requiresVersion: "2.1.0",
 
 ####`init()`
 This method is called when a module gets instantiated. In most cases you do not need to subclass this method.
+
+####`loaded(callback)`
+
+*Introduced in version: 2.1.1.*
+
+This method is called when a module is loaded. Subsequent modules in the config are not yet loaded. The `callback` function MUST be called when the module is done loading. In most cases you do not need to subclass this method.
+
+**Example:**
+````javascript
+loaded: function(callback) {
+	this.finishLoading();
+	Log.log(this.name + ' is loaded!');
+	callback();
+}
+````
 
 ####`start()`
 This method is called when all modules are loaded an the system is ready to boot up. Keep in mind that the dom object for the module is not yet created. The start method is a perfect place to define any additional module properties:
@@ -117,7 +132,7 @@ The getScripts method is called to request any additional scripts that need to b
 getScripts: function() {
 	return [
 		'script.js', // will try to load it from the vendor folder, otherwise it will load is from the module folder.
-    'moment.js', // this file is available in the vendor folder, so it doesn't need to be available in the module folder.
+		'moment.js', // this file is available in the vendor folder, so it doesn't need to be available in the module folder.
 		this.file('anotherfile.js'), // this file will be loaded straight from the module folder.
 		'https://code.jquery.com/jquery-2.2.3.min.js',  // this file will be loaded from the jquery servers.
 	]
@@ -339,7 +354,7 @@ Visiblity locking helps the module system to prevent unwanted hide/show actions.
 ````javascript
 moduleA.hide(0, {lockString: "module_b_identifier"});
 ````
-Module A is now hidden, and has an lock array with the following strings: 
+Module A is now hidden, and has an lock array with the following strings:
 ````javascript
 moduleA.lockStrings == ["module_b_identifier"]
 moduleA.hidden == true
@@ -474,7 +489,7 @@ A string that defines the minimum version of the MagicMirror framework. If it is
 
 **Note:** Since this check is introduced in version 2.1.0, this check will not be run in older versions. Keep this in mind if you get issue reports on your module.
 
-Example: 
+Example:
 ````javascript
 requiresVersion: "2.1.0",
 ````

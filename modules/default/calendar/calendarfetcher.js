@@ -25,9 +25,10 @@ var CalendarFetcher = function(url, reloadInterval, maximumEntries, maximumNumbe
 		clearTimeout(reloadTimer);
 		reloadTimer = null;
 
+		nodeVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
 		var opts = {
 			headers: {
-				"User-Agent": "Mozilla/5.0 (Node.js 6.0.0) MagicMirror/v2 (https://github.com/MichMich/MagicMirror/)"
+				"User-Agent": "Mozilla/5.0 (Node.js "+ nodeVersion + ") MagicMirror/"  + global.version +  " (https://github.com/MichMich/MagicMirror/)"
 			}
 		};
 
@@ -51,6 +52,10 @@ var CalendarFetcher = function(url, reloadInterval, maximumEntries, maximumNumbe
 
 			var limitFunction = function(date, i) {return i < maximumEntries;};
 
+			var eventDate = function(event, time) {
+				return (event[time].length === 8) ? moment(event[time], "YYYYMMDD") : moment(new Date(event[time]));
+			};
+
 			for (var e in data) {
 				var event = data[e];
 				var now = new Date();
@@ -69,10 +74,10 @@ var CalendarFetcher = function(url, reloadInterval, maximumEntries, maximumNumbe
 
 				if (event.type === "VEVENT") {
 
-					var startDate = (event.start.length === 8) ? moment(event.start, "YYYYMMDD") : moment(new Date(event.start));
+					var startDate = eventDate(event, "start");
 					var endDate;
 					if (typeof event.end !== "undefined") {
-						endDate = (event.end.length === 8) ? moment(event.end, "YYYYMMDD") : moment(new Date(event.end));
+						endDate = eventDate(event, "end");
 					} else {
 						if (!isFacebookBirthday) {
 							endDate = startDate;
@@ -113,6 +118,7 @@ var CalendarFetcher = function(url, reloadInterval, maximumEntries, maximumNumbe
 									startDate: startDate.format("x"),
 									endDate: endDate.format("x"),
 									fullDayEvent: isFullDayEvent(event),
+									class: event.class,
 									firstYear: event.start.getFullYear(),
 									location: location,
 									geo: geo,
@@ -147,6 +153,7 @@ var CalendarFetcher = function(url, reloadInterval, maximumEntries, maximumNumbe
 							startDate: startDate.format("x"),
 							endDate: endDate.format("x"),
 							fullDayEvent: fullDayEvent,
+							class: event.class,
 							location: location,
 							geo: geo,
 							description: description

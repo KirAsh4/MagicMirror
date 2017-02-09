@@ -43,6 +43,7 @@
 					var ret = fn.apply(this, arguments);
 					this._super = tmp;
 
+
 					return ret;
 				};
 			})(name, prop[name]) : prop[name];
@@ -79,7 +80,7 @@ function cloneObject(obj) {
 	var temp = obj.constructor(); // give temp the original obj's constructor
 	for (var key in obj) {
 		temp[key] = cloneObject(obj[key]);
-	
+
 		if (key === "lockStrings") {
 			Log.log(key);
 		}

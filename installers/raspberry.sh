@@ -18,7 +18,7 @@ echo '                       \$$$$$$  |'
 echo '                        \______/'
 echo -e "\e[0m"
 
-# Define the tested version of Node.js. 
+# Define the tested version of Node.js.
 NODE_TESTED="v5.1.0"
 
 #Determine which Pi is running.
@@ -36,6 +36,10 @@ fi
 function version_gt() { test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" != "$1"; }
 function command_exists () { type "$1" &> /dev/null ;}
 
+# Update before first apt-get
+echo -e "\e[96mUpdating packages ...\e[90m"
+sudo apt-get update || echo -e "\e[91mUpdate failed, carrying on installation ...\e[90m"
+
 # Installing helper tools
 echo -e "\e[96mInstalling helper tools ...\e[90m"
 sudo apt-get install curl wget git build-essential unzip || exit
@@ -49,19 +53,19 @@ if command_exists node; then
 	echo -e "\e[0mMinimum Node version: \e[1m$NODE_TESTED\e[0m"
 	echo -e "\e[0mInstalled Node version: \e[1m$NODE_CURRENT\e[0m"
 	if version_gt $NODE_TESTED $NODE_CURRENT; then
-    	echo -e "\e[96mNode should be upgraded.\e[0m"
-    	NODE_INSTALL=true
+		echo -e "\e[96mNode should be upgraded.\e[0m"
+		NODE_INSTALL=true
 
-    	#Check if a node process is currenlty running.
-    	#If so abort installation.
-    	if pgrep "node" > /dev/null; then
-		    echo -e "\e[91mA Node process is currently running. Can't upgrade."
-		    echo "Please quit all Node processes and restart the installer."
-		    exit;
+		#Check if a node process is currenlty running.
+		#If so abort installation.
+		if pgrep "node" > /dev/null; then
+			echo -e "\e[91mA Node process is currently running. Can't upgrade."
+			echo "Please quit all Node processes and restart the installer."
+			exit;
 		fi
 
-    else
-    	echo -e "\e[92mNo Node.js upgrade nessecery.\e[0m"
+	else
+		echo -e "\e[92mNo Node.js upgrade nessecery.\e[0m"
 	fi
 
 else
@@ -113,32 +117,45 @@ else
 	exit;
 fi
 
+# Use sample config for start MagicMirror
+cp config/config.js.sample config/config.js
+
 # Check if plymouth is installed (default with PIXEL desktop environment), then install custom splashscreen.
 echo -e "\e[96mCheck plymouth installation ...\e[0m"
 if command_exists plymouth; then
-    THEME_DIR="/usr/share/plymouth/themes"
-    echo -e "\e[90mSplashscreen: Checking themes directory.\e[0m"
-    if [ -d $THEME_DIR ]; then
-        echo -e "\e[90mSplashscreen: Create theme directory if not exists.\e[0m"
-        if [ ! -d $THEME_DIR/MagicMirror ]; then
-            sudo mkdir $THEME_DIR/MagicMirror
-        fi
+	THEME_DIR="/usr/share/plymouth/themes"
+	echo -e "\e[90mSplashscreen: Checking themes directory.\e[0m"
+	if [ -d $THEME_DIR ]; then
+		echo -e "\e[90mSplashscreen: Create theme directory if not exists.\e[0m"
+		if [ ! -d $THEME_DIR/MagicMirror ]; then
+			sudo mkdir $THEME_DIR/MagicMirror
+		fi
 
-        if sudo cp ~/MagicMirror/splashscreen/splash.png $THEME_DIR/MagicMirror/splash.png && sudo cp ~/MagicMirror/splashscreen/MagicMirror.plymouth $THEME_DIR/MagicMirror/MagicMirror.plymouth && sudo cp ~/MagicMirror/splashscreen/MagicMirror.script $THEME_DIR/MagicMirror/MagicMirror.script; then
-            echo -e "\e[90mSplashscreen: Theme copied successfully.\e[0m"
-            if sudo plymouth-set-default-theme -R MagicMirror; then
-                echo -e "\e[92mSplashscreen: Changed theme to MagicMirror successfully.\e[0m"
-            else
-                echo -e "\e[91mSplashscreen: Couldn't change theme to MagicMirror!\e[0m"
-            fi
-        else
-            echo -e "\e[91mSplashscreen: Copying theme failed!\e[0m"
-        fi
-    else
-        echo -e "\e[91mSplashscreen: Themes folder doesn't exist!\e[0m"
-    fi
+		if sudo cp ~/MagicMirror/splashscreen/splash.png $THEME_DIR/MagicMirror/splash.png && sudo cp ~/MagicMirror/splashscreen/MagicMirror.plymouth $THEME_DIR/MagicMirror/MagicMirror.plymouth && sudo cp ~/MagicMirror/splashscreen/MagicMirror.script $THEME_DIR/MagicMirror/MagicMirror.script; then
+			echo -e "\e[90mSplashscreen: Theme copied successfully.\e[0m"
+			if sudo plymouth-set-default-theme -R MagicMirror; then
+				echo -e "\e[92mSplashscreen: Changed theme to MagicMirror successfully.\e[0m"
+			else
+				echo -e "\e[91mSplashscreen: Couldn't change theme to MagicMirror!\e[0m"
+			fi
+		else
+			echo -e "\e[91mSplashscreen: Copying theme failed!\e[0m"
+		fi
+	else
+		echo -e "\e[91mSplashscreen: Themes folder doesn't exist!\e[0m"
+	fi
 else
 	echo -e "\e[93mplymouth is not installed.\e[0m";
+fi
+
+# Use pm2 control like a service MagicMirror
+read -p "Do you want use pm2 for auto starting of your MagicMirror (y/n)?" choice
+if [[ $choice =~ ^[Yy]$ ]]
+then
+    sudo npm install -g pm2
+    sudo su -c "env PATH=$PATH:/usr/bin pm2 startup linux -u pi --hp /home/pi"
+    pm2 start ~/MagicMirror/installers/pm2_MagicMirror.json
+    pm2 save
 fi
 
 echo " "
