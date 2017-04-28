@@ -1,28 +1,8 @@
-const Application = require("spectron").Application;
-const path = require("path");
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-
-var electronPath = path.join(__dirname, "../../../", "node_modules", ".bin", "electron");
-
-if (process.platform === "win32") {
-	electronPath += ".cmd";
-}
-
-var appPath = path.join(__dirname, "../../../js/electron.js");
-
-var app = new Application({
-	path: electronPath,
-	args: [appPath]
-});
-
-global.before(function () {
-	chai.should();
-	chai.use(chaiAsPromised);
-});
+const globalSetup = require("../global-setup");
+const app = globalSetup.app;
 
 describe("Clock module", function () {
-	this.timeout(10000);
+	this.timeout(20000);
 
 	describe("with default 24hr clock config", function() {
 		before(function() {
@@ -118,6 +98,35 @@ describe("Clock module", function () {
 			return app.client.waitUntilWindowLoaded()
 				.getText(".clock .time").should.eventually.match(timeRegex);
 		});
+	});
+
+	describe("with showWeek config enabled", function() {
+		before(function() {
+			// Set config sample for use in test
+			process.env.MM_CONFIG_FILE = "tests/configs/modules/clock/clock_showWeek.js";
+		});
+
+		beforeEach(function (done) {
+			app.start().then(function() { done(); } );
+		});
+
+		afterEach(function (done) {
+			app.stop().then(function() { done(); });
+		});
+
+		it("shows week with correct format", function() {
+			const weekRegex = /^Week [0-9]{1,2}$/;
+			return app.client.waitUntilWindowLoaded()
+				.getText(".clock .week").should.eventually.match(weekRegex);
+		});
+
+		it("shows week with correct number of week of year", function() {
+			const currentWeekNumber = require("current-week-number")();
+			const weekToShow = "Week " + currentWeekNumber;
+			return app.client.waitUntilWindowLoaded()
+				.getText(".clock .week").should.eventually.equal(weekToShow);
+		});
+
 	});
 
 });

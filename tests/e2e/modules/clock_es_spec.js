@@ -1,28 +1,8 @@
-const Application = require("spectron").Application;
-const path = require("path");
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-
-var electronPath = path.join(__dirname, "../../../", "node_modules", ".bin", "electron");
-
-if (process.platform === "win32") {
-	electronPath += ".cmd";
-}
-
-var appPath = path.join(__dirname, "../../../js/electron.js");
-
-var app = new Application({
-	path: electronPath,
-	args: [appPath]
-});
-
-global.before(function () {
-	chai.should();
-	chai.use(chaiAsPromised);
-});
+const globalSetup = require("../global-setup");
+const app = globalSetup.app;
 
 describe("Clock set to spanish language module", function () {
-	this.timeout(10000);
+	this.timeout(20000);
 
 	describe("with default 24hr clock config", function() {
 		before(function() {
@@ -39,7 +19,7 @@ describe("Clock set to spanish language module", function () {
 		});
 
 		it("shows date with correct format", function () {
-			const dateRegex = /^(?:lunes|martes|miércoles|jueves|viernes|sabado|domingo), \d{1,2} de (?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre) de \d{4}$/;
+			const dateRegex = /^(?:lunes|martes|miércoles|jueves|viernes|sábado|domingo), \d{1,2} de (?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre) de \d{4}$/;
 			return app.client.waitUntilWindowLoaded()
 				.getText(".clock .date").should.eventually.match(dateRegex);
 		});
@@ -66,7 +46,7 @@ describe("Clock set to spanish language module", function () {
 		});
 
 		it("shows date with correct format", function () {
-			const dateRegex = /^(?:lunes|martes|miércoles|jueves|viernes|sabado|domingo), \d{1,2} de (?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre) de \d{4}$/;
+			const dateRegex = /^(?:lunes|martes|miércoles|jueves|viernes|sábado|domingo), \d{1,2} de (?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre) de \d{4}$/;
 			return app.client.waitUntilWindowLoaded()
 				.getText(".clock .date").should.eventually.match(dateRegex);
 		});

@@ -31,7 +31,7 @@ Electron, the app wrapper around MagicMirror², only supports the Raspberry Pi 2
 
 Execute the following command on your Raspberry Pi to install MagicMirror²:
 ````
-curl -sL https://raw.githubusercontent.com/MichMich/MagicMirror/master/installers/raspberry.sh | bash
+bash -c "$(curl -sL https://raw.githubusercontent.com/MichMich/MagicMirror/master/installers/raspberry.sh)"
 ````
 
 ### Manual Installation
@@ -59,7 +59,7 @@ docker run  -d \
 			--volume ~/magic_mirror/config:/opt/magic_mirror/config \
 			--volume ~/magic_mirror/modules:/opt/magic_mirror/modules \
 			--name magic_mirror \
-			MichMich/MagicMirror
+			bastilimbach/docker-magicmirror
 ```
 
 | **Volumes** | **Description** |
@@ -74,6 +74,8 @@ var config = {
 	ipWhitelist: ["127.0.0.1", "::ffff:127.0.0.1", "::1", "::ffff:172.17.0.1"]
 };
 ```
+
+If you want to run the server on a raspberry pi, use the `raspberry` tag. (bastilimbach/docker-magicmirror:raspberry)
 
 #### Manual
 
@@ -104,19 +106,24 @@ Type `git status` to see your changes, if there are any, you can reset them with
 1. Duplicate `config/config.js.sample` to `config/config.js`. **Note:** If you used the installer script. This step is already done for you.
 2. Modify your required settings.
 
+Note: You'll can check your configuration running the follow command:
+```bash
+npm run config:check
+```
+
 The following properties can be configured:
 
 | **Option** | **Description** |
 | --- | --- |
 | `port` | The port on which the MagicMirror² server will run on. The default value is `8080`. |
 | `address` | The ip address the accept connections. The  default open bind `::` is IPv6 is available or `0.0.0.0` IPv4 run on.  Example config: `192.168.10.100`. |
-| `ipWhitelist` | The list of IPs from which you are allowed to access the MagicMirror². The default value is `["127.0.0.1", "::ffff:127.0.0.1", "::1"]`. It is possible to specify IPs with subnet masks (`["127.0.0.1", "127.0.0.1/24"]`) or define ip ranges (`["127.0.0.1", ["192.168.0.1", "192.168.0.100"]]`).|
+| `ipWhitelist` | The list of IPs from which you are allowed to access the MagicMirror². The default value is `["127.0.0.1", "::ffff:127.0.0.1", "::1"]`. It is possible to specify IPs with subnet masks (`["127.0.0.1", "127.0.0.1/24"]`) or define ip ranges (`["127.0.0.1", ["192.168.0.1", "192.168.0.100"]]`). Set `[]` to allow all IP addresses. For more information about how configure this directive see the [follow post ipWhitelist HowTo](https://forum.magicmirror.builders/topic/1326/ipwhitelist-howto) |
 | `zoom` | This allows to scale the mirror contents with a given zoom factor. The default value is `1.0`|
 | `language` | The language of the interface. (Note: Not all elements will be localized.) Possible values are `en`, `nl`, `ru`, `fr`, etc., but the default value is `en`. |
 | `timeFormat` | The form of time notation that will be used. Possible values are `12` or `24`. The default is `24`. |
 | `units` | The units that will be used in the default weather modules. Possible values are `metric` or `imperial`. The default is `metric`. |
 | `modules` | An array of active modules. **The array must contain objects. See the next table below for more information.** |
-| `electronOptions` | An optional array of Electron (browser) options. This allows configuration of e.g. the browser screen size and position (example: `electronOptions: { fullscreen: false, width: 800, height: 600 }`). Kiosk mode can be enabled by setting `.kiosk = true`, `.autoHideMenuBar = false`, `.fullscreen = false`. More options can be found [here](https://github.com/electron/electron/blob/master/docs/api/browser-window.md). |
+| `electronOptions` | An optional array of Electron (browser) options. This allows configuration of e.g. the browser screen size and position (example: `electronOptions: { fullscreen: false, width: 800, height: 600 }`). Kiosk mode can be enabled by setting `kiosk = true`, `autoHideMenuBar = false` and `fullscreen = false`. More options can be found [here](https://github.com/electron/electron/blob/master/docs/api/browser-window.md). |
 
 
 Module configuration:

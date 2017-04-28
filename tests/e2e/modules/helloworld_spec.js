@@ -1,28 +1,8 @@
-const Application = require("spectron").Application;
-const path = require("path");
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-
-var electronPath = path.join(__dirname, "../../../", "node_modules", ".bin", "electron");
-
-if (process.platform === "win32") {
-	electronPath += ".cmd";
-}
-
-var appPath = path.join(__dirname, "../../../js/electron.js");
-
-var app = new Application({
-	path: electronPath,
-	args: [appPath]
-});
-
-global.before(function () {
-	chai.should();
-	chai.use(chaiAsPromised);
-});
+const globalSetup = require("../global-setup");
+const app = globalSetup.app;
 
 describe("Test helloworld module", function () {
-	this.timeout(10000);
+	this.timeout(20000);
 
 	before(function() {
 		// Set config sample for use in test
